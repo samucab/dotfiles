@@ -58,7 +58,7 @@
   rebase = false
 
 [init]
-  defaultBranch = master
+  defaultBranch = main
 [user]
-	email = 132624144+samuelbarsanellicosta@users.noreply.github.com
-	name = Samuel Costa
+	email = 132624144+samucab@users.noreply.github.com
+	name = Samuel Barsanelli Costa

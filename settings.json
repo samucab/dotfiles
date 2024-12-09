@@ -24,6 +24,8 @@
     "emmet.showSuggestionsAsSnippets": true,
     "emmet.triggerExpansionOnTab": true,
     "explorer.confirmDelete": false,
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 60000,
     "files.exclude": {
         "__pycache__": true,
         "_site": true,
@@ -77,6 +79,7 @@
     "telemetry.telemetryLevel": "off",
     "window.restoreWindows": "none",
     "window.newWindowDimensions": "maximized",
+    "window.zoomLevel": 1,
     "workbench.editor.enablePreview": true,
     "workbench.iconTheme": "vscode-great-icons",
     "workbench.settings.editor": "json",

@@ -73,7 +73,6 @@
         "rubocop": true
     },
     "search.exclude": {
-      // Inherits all glob patterns from the `files.exclude` setting.
       "**/.venv": true
     },
     "telemetry.telemetryLevel": "off",
@@ -86,5 +85,5 @@
     "workbench.settings.openDefaultSettings": true,
     "workbench.settings.useSplitJSON": true,
     "workbench.startupEditor": "newUntitledFile",
-    "workbench.panel.defaultLocation": "right",
+    "workbench.panel.defaultLocation": "right"
 }

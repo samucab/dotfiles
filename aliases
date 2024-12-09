@@ -1,5 +1,45 @@
 # Get External IP / Internet Speed
 alias myip="curl https://ipinfo.io/json" # or /ip for plain-text ip
 alias speedtest="curl -s https://raw.githubusercontent.com/sivel/speedtest-cli/master/speedtest.py | python -"
+
+# Set power option aliases
 alias sd="shutdown -h now" 
 alias rb="reboot"
+
+# Set airpod connection alias
+alias ap='connect_airpods'
+connect_airpods() {
+    bluetoothctl connect CC:68:E0:25:E1:C5
+
+    # Wait for the AirPods to connect
+    sleep 2
+
+    # Verify connection
+    if bluetoothctl info CC:68:E0:25:E1:C5 | grep -q "Connected: yes"; then
+
+        # Set the profile to HFP
+        if pactl set-card-profile bluez_card.CC_68_E0_25_E1_C5 handsfree_head_unit; then
+            echo "Profile set to HFP"
+
+            # Check and set the correct source and sink
+            source_port=$(pactl list sources short | grep bluez_source.CC_68_E0_25_E1_C5.handsfree_head_unit | awk '{print $2}')
+            sink_port=$(pactl list sinks short | grep bluez_sink.CC_68_E0_25_E1_C5.handsfree_head_unit | awk '{print $2}')
+
+            if [ -n "$source_port" ] && [ -n "$sink_port" ]; then
+                # Set the AirPods as the default input/output devices
+                if pactl set-default-sink "$sink_port" && \
+                   pactl set-default-source "$source_port"; then
+                    echo "AirPods set as default input/output devices"
+                else
+                    echo "Failed to set AirPods as default input/output devices"
+                fi
+            else
+                echo "Failed to find the correct source or sink port"
+            fi
+        else
+            echo "Failed to set profile to HFP"
+        fi
+    else
+        echo "Failed to connect to AirPods"
+    fi
+}

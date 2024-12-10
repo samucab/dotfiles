@@ -16,7 +16,7 @@ It will install and configure:
 - [Simplenote](https://simplenote.com/)
 - [Gnumeric](https://wiki.gnome.org/Apps/Gnumeric)
 - [QGIS](https://qgis.org/)
-- [XSane](https://wiki.ubuntuusers.de/XSane/)
+- [Simple Scan](https://apps.gnome.org/en/SimpleScan/)
 - [Google Earth](https://www.google.com/earth/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Oh My Zsh](https://ohmyz.sh/)

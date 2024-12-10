@@ -31,10 +31,10 @@ echo "Installing QGIS..."
 sudo apt update
 sudo apt install -y qgis
 
-# Install XSane
-echo "Installing XSane..."
+# Install Simple Scan
+echo "Installing Simple Scan..."
 sudo apt update
-sudo apt install -y xsane
+sudo apt install -y simple-scan
 
 # Install Google Earth
 echo "Installing Google Earth..."

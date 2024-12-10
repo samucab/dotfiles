@@ -7,7 +7,7 @@ This script will set you up and running after a fresh OS installation. It is mad
 Run the script with the following command line:
 
 ```bash
-zsh install.sh
+bash install.sh
 ```
 
 It will install and configure:
@@ -17,15 +17,16 @@ It will install and configure:
 - [Gnumeric](https://wiki.gnome.org/Apps/Gnumeric)
 - [QGIS](https://qgis.org/)
 - [Simple Scan](https://apps.gnome.org/en/SimpleScan/)
-- [Google Earth](https://www.google.com/earth/)
-- [Visual Studio Code](https://code.visualstudio.com/)
+- [Google Earth](https://www.google.com/earth/about/versions/#download-pro)
+- [Visual Studio Code](https://code.visualstudio.com/download#)
 - [Oh My Zsh](https://ohmyz.sh/)
 - [direnv](https://direnv.net/)
-- [GitHub CLI](https://cli.github.com/)
+- [GitHub CLI](https://github.com/cli/cli/blob/trunk/docs/install_linux.md)
 - [Google Cloud CLI](https://cloud.google.com/sdk)
 - [pyenv](https://github.com/pyenv/pyenv)
 - [Python](https://www.python.org/)
 - [Docker](https://www.docker.com/)
+- [PostgreSQL](https://dev.to/johndotowl/postgresql-16-installation-on-ubuntu-2204-51ia)
 
 
 ## GitHub CLI Authentication

@@ -7,83 +7,75 @@ set -e
 ### Software Installation ###
 #############################
 
-# Install Firefox if not already installed
-if ! command -v "firefox" &> /dev/null; then
-    echo "Firefox not found. Installing..."
-    sudo apt update
-    sudo apt install -y firefox
-else
-    echo "Firefox is already installed."
-fi
+# Update Package Metadata
+echo "Updating Package Metadata..."
+sudo apt-get update
+
+# Install Essential Packages
+echo "Installing essential packages..."
+sudo apt-get install -y wget curl gnupg gnupg2 lsb-release \
+apt-transport-https ca-certificates
+
+# Install Firefox
+echo "Installing Firefox..."
+sudo apt-get install -y firefox
 
 # Install Simplenote
 echo "Installing Simplenote..."
-sudo apt update
-sudo apt install -y simplenote
+sudo apt-get install -y simplenote
 
 # Install Gnumeric
 echo "Installing Gnumeric..."
-sudo apt update
-sudo apt install -y gnumeric
+sudo apt-get install -y gnumeric
 
 # Install QGIS
 echo "Installing QGIS..."
-sudo apt update
-sudo apt install -y qgis
+sudo apt-get install -y qgis
 
 # Install Simple Scan
 echo "Installing Simple Scan..."
-sudo apt update
-sudo apt install -y simple-scan
+sudo apt-get install -y simple-scan
 
 # Install Google Earth
 echo "Installing Google Earth..."
-wget https://dl.google.com/earth/client/earth_stable_current_amd64.deb
-sudo dpkg -i earth_stable_current_amd64.deb
-sudo apt install -f  # Fix any dependencies that might be missing
+wget https://dl.google.com/dl/earth/client/current/google-earth-pro-stable_current_amd64.deb
+sudo dpkg -i google-earth-pro-stable_current_amd64.deb
+rm google-earth-pro-stable_current_amd64.deb
 
 # Install VS Code
 echo "Installing VS Code..."
-wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > packages.microsoft.gpg
-sudo install -o root -g root -m 644 packages.microsoft.gpg /etc/apt/trusted.gpg.d/
-sudo sh -c 'echo "deb [arch=amd64,arm64,armhf signed-by=/etc/apt/trusted.gpg.d/packages.microsoft.gpg] https://packages.microsoft.com/repos/code stable main" > /etc/apt/sources.list.d/vscode.list'
-rm -f packages.microsoft.gpg
-sudo apt update
-sudo apt install -y code
+wget https://vscode.download.prss.microsoft.com/dbazure/download/stable/f1a4fb101478ce6ec82fe9627c43efbf9e98c813/code_1.95.3-1731513102_amd64.deb
+sudo dpkg -i code_1.95.3-1731513102_amd64.deb
+rm code_1.95.3-1731513102_amd64.deb
 
 # Install VS Code Extensions
 echo "Installing VS Code Extensions..."
-if command -v code &> /dev/null; then
-  extensions=(
-    ms-toolsai.datawrangler
-    cweijan.vscode-database-client2
-    cweijan.dbclient-jdbc
-    ms-azuretools.vscode-docker
-    github.copilot
-    ms-toolsai.jupyter
-    ms-toolsai.vscode-jupyter-cell-tags
-    ms-toolsai.jupyter-keymap
-    ms-toolsai.jupyter-renderers
-    ms-toolsai.vscode-jupyter-slideshow
-    ms-python.vscode-pylance
-    ms-python.python
-    ms-python.debugpy
-    KevinRose.vsc-python-indent
-    mechatroner.rainbow-csv
-    adpyke.vscode-sql-formatter
-    emmanuelbeziat.vscode-great-icons
-  )
-  for ext in "${extensions[@]}"; do
-    code --install-extension "$ext"
-  done
-else
-  echo "VS Code is not installed or not in PATH. Skipping extensions."
-fi
+code --install-extension ms-toolsai.datawrangler
+code --install-extension cweijan.vscode-database-client2
+code --install-extension cweijan.dbclient-jdbc
+code --install-extension ms-azuretools.vscode-docker
+code --install-extension github.copilot
+code --install-extension ms-toolsai.jupyter
+code --install-extension ms-toolsai.vscode-jupyter-cell-tags
+code --install-extension ms-toolsai.jupyter-keymap
+code --install-extension ms-toolsai.jupyter-renderers
+code --install-extension ms-toolsai.vscode-jupyter-slideshow
+code --install-extension ms-python.vscode-pylance
+code --install-extension ms-python.python
+code --install-extension ms-python.debugpy
+code --install-extension KevinRose.vsc-python-indent
+code --install-extension mechatroner.rainbow-csv
+code --install-extension adpyke.vscode-sql-formatter
+code --install-extension emmanuelbeziat.vscode-great-icons
 
 # Install Command Line Tools
 echo "Installing command line tools..."
-sudo apt update
-sudo apt install -y curl git unzip zsh tree direnv
+sudo apt-get install -y curl git unzip zsh tree direnv
+
+# Install oh-my-zsh
+echo "Installing oh-my-zsh..."
+RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+chsh -s "$(which zsh)"
 
 # Configure direnv
 echo "Configuring direnv..."
@@ -91,27 +83,22 @@ if ! grep -q 'direnv hook zsh' ~/.zshrc; then
   echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc
 fi
 
-# Install oh-my-zsh
-echo "Installing oh-my-zsh..."
-RUNZSH=yes sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-
 # Install GitHub CLI
-echo "Installing GitHub CLI..."
-sudo apt remove -y gitsome || true
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-sudo apt update
-sudo apt install -y gh
-echo "GitHub CLI version:"
+(type -p wget >/dev/null) \
+	&& sudo mkdir -p -m 755 /etc/apt/keyrings \
+	&& wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+	&& sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
+	&& echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+	&& sudo apt-get update \
+	&& sudo apt-get install -y gh
 gh --version
 
 # Install GCloud CLI
 echo "Installing GCloud CLI..."
-sudo apt-get install apt-transport-https ca-certificates gnupg
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --dearmor > /usr/share/keyrings/cloud.google.gpg
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-sudo apt-get update && sudo apt-get install -y google-cloud-sdk google-cloud-sdk-app-engine-python
-echo "GCloud version:"
+curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
+echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+sudo apt-get update
+sudo apt-get install -y google-cloud-sdk
 gcloud --version
 
 # Install pyenv and its dependencies
@@ -131,13 +118,11 @@ git clone https://github.com/pyenv/pyenv-virtualenv.git "$(pyenv root)/plugins/p
 pyenv virtualenv 3.12.6 generic
 pyenv global generic
 pip install --upgrade pip
-echo "Python version:"
 python --version
 
 # Install Docker
 echo "Installing Docker..."
 sudo apt-get update
-sudo apt-get install -y ca-certificates curl
 sudo install -m 0755 -d /etc/apt/keyrings
 sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -149,25 +134,36 @@ sudo apt-get update
 sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 sudo groupadd docker || true
 sudo gpasswd -a "$USER" docker
-echo "Testing Docker installation..."
 docker --version
-docker run hello-world
 
-# Install PostgreSQL 16 and PostGIS 3.4.0
-echo "Installing PostgreSQL 16 and PostGIS 3.4.0..."
-sudo apt update
-sudo apt install -y gnupg2 curl lsb-release ca-certificates
-sudo sh -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -c | awk '{print $2}')-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
-curl https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo tee /etc/apt/trusted.gpg.d/postgresql.asc
-sudo apt update
-sudo apt install -y postgresql-16 postgresql-client-16
-sudo apt install -y postgis postgresql-16-postgis-3
-sudo systemctl enable postgresql
-sudo systemctl start postgresql
-echo "PostgreSQL version:"
-psql --version
-echo "PostGIS version:"
-psql -d postgres -c "SELECT PostGIS_Version();"
+# Build a PostGIS container
+echo "Building a PostGIS container..."
+docker pull postgis/postgis:16-3.5
+docker create \
+    --name local-postgis \
+    -e POSTGRES_USER=admin \
+    -e POSTGRES_PASSWORD=admin \
+    -e POSTGRES_DB=gisdb \
+    -p 5432:5432 \
+    postgis/postgis:16-3.5
+echo "To start the PostGIS container, run 'docker start local-postgis'"
+echo "Connection parameters: host=127.0.0.1 port=5432 user=admin password=admin dbname=gisdb" 
+
+# Upgrade Installed Packages
+echo "Upgrading installed packages..."
+sudo apt-get upgrade
+
+# Remove Unused Dependencies
+echo "Removing unused dependencies..."
+sudo apt-get autoremove
+
+# Clean Cached Files
+echo "Cleaning cached files..."
+sudo apt-get clean
+
+# Check for Broken Dependencies
+echo "Checking for broken dependencies..."
+sudo apt-get --fix-broken install
 
 echo "Software installation completed!"
 
@@ -223,6 +219,8 @@ for name in settings.json keybindings.json; do
   symlink "$PWD/$name" "$target"
 done
 
+echo "Setup completed! Restarting shell..."
+
 # Final Refresh
 source ~/.zshrc
-echo "Setup completed!"
+exec zsh

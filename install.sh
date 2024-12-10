@@ -16,6 +16,10 @@ echo "Installing essential packages..."
 sudo apt-get install -y wget curl gnupg gnupg2 lsb-release \
 apt-transport-https ca-certificates
 
+# Install Essential Productivity Tools
+echo "Installing Gnumeric..."
+sudo apt-get install -y gnumeric gnome-disk-utility
+
 # Install Firefox
 echo "Installing Firefox..."
 sudo apt-get install -y firefox
@@ -23,10 +27,6 @@ sudo apt-get install -y firefox
 # Install Simplenote
 echo "Installing Simplenote..."
 sudo apt-get install -y simplenote
-
-# Install Gnumeric
-echo "Installing Gnumeric..."
-sudo apt-get install -y gnumeric
 
 # Install QGIS
 echo "Installing QGIS..."
